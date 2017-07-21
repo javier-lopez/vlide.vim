@@ -1,0 +1,4 @@
+Execute:
+  Log 'setup.vader'
+
+" vim: set ts=2 sw=2 tw=0 ft=vader :

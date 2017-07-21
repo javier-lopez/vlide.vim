@@ -1,0 +1,28 @@
+"Include: include/setup.vader
+
+Given(3 slides):
+  foo
+  ===
+  bar
+  ===
+  baz
+
+Execute(Vlide):
+  let g:vlide_slide_separator = '\v^\={3,}'
+  Vlide
+
+  redir => msg
+      ls!
+  redir END | Log "ls: " . msg
+  let buf = join(getbufline(3, 0, "$"), "\n") | Log "[3]: " . buf
+  let vli = join(getbufline(6, 0, "$"), "\n") | Log "[6]: " . vli
+
+Expect(1st slide):
+  foo
+
+Execute(Test g:loaded_vlide):
+  Assert exists("g:loaded_vlide")
+
+"Include: include/teardown.vader
+
+" vim: set ts=2 sw=2 tw=0 ft=vader :

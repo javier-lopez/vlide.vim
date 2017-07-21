@@ -1,0 +1,8 @@
+"Include: include/setup.vader
+
+Execute:
+  Log 'functions.vader'
+
+"Include: include/teardown.vader
+
+" vim: set ts=2 sw=2 tw=0 ft=vader :

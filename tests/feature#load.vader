@@ -1,0 +1,55 @@
+~ Init/Toggle/Shutdown
+"Include: include/setup.vader
+
+Execute(Test g:loaded_vlide):
+  Assert exists("g:loaded_vlide")
+
+Given(Single line):
+  Duis bibendum neque nec justo tincidunt euismod.
+
+Execute(Enter Vlide mode):
+  Vlide
+  Assert &statusline =~# '.*Press.*or.*to.*continue.*'
+
+Expect(The same line):
+  Duis bibendum neque nec justo tincidunt euismod.
+
+Execute(Exit Vlide mode):
+  Assert &statusline =~# '.*Press.*or.*to.*continue.*'
+  VlideExit
+  Assert &statusline !~# '.*Press.*or.*to.*continue.*'
+
+Expect(The same line):
+  Duis bibendum neque nec justo tincidunt euismod.
+
+#Fix toggle tests
+Execute(Toggle Vlide):
+  redir => msg
+      ls!
+  redir END | Log "ls: " . msg
+  let buf = join(getbufline(3, 0, "$"), "\n") | Log "[3]: " . buf
+
+  Vlide!
+  Assert &statusline =~# '.*Press.*or.*to.*continue.*'
+
+  redir => msg
+      ls!
+  redir END | Log "ls: " . msg
+  let buf = join(getbufline(3, 0, "$"), "\n") | Log "[3]: " . buf
+  let vli = join(getbufline(5, 0, "$"), "\n") | Log "[5]: " . vli
+
+  Vlide!
+  redir => msg
+      ls!
+  redir END | Log "ls: " . msg
+
+  let buf = join(getbufline(3, 0, "$"), "\n") | Log "[3]: " . buf
+  let vli = join(getbufline(5, 0, "$"), "\n") | Log "[5]: " . vli
+  Assert &statusline !~# '.*Press.*or.*to.*continue.*'
+
+Expect(The same line):
+  Duis bibendum neque nec justo tincidunt euismod.
+
+Include: include/teardown.vader
+
+"" vim: set ts=2 sw=2 tw=0 ft=vader :

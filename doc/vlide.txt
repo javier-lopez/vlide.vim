@@ -1,0 +1,450 @@
+*VLide*          A Vim presentation plugin that owns your momma!
+
+    watch out!, here comes ... ~
+
+
+    ▄               ▄  ▄            ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄
+   ▐░▌             ▐░▌▐░▌          ▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌
+    ▐░▌           ▐░▌ ▐░▌           ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀
+     ▐░▌         ▐░▌  ▐░▌               ▐░▌     ▐░▌       ▐░▌▐░▌
+      ▐░▌       ▐░▌   ▐░▌               ▐░▌     ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄
+       ▐░▌     ▐░▌    ▐░▌               ▐░▌     ▐░▌       ▐░▌▐░░░░░░░░░░░▌
+        ▐░▌   ▐░▌     ▐░▌               ▐░▌     ▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀
+         ▐░▌ ▐░▌      ▐░▌               ▐░▌     ▐░▌       ▐░▌▐░▌
+          ▐░▐░▌       ▐░█▄▄▄▄▄▄▄▄▄  ▄▄▄▄█░█▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄
+           ▐░▌        ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌
+            ▀          ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀
+
+
+                              Reference Slide~
+
+==============================================================================
+CONTENTS                                                        *VLide-contents*
+
+    1. Intro .......................................... |VLideIntro|
+    2. Usage .......................................... |VLideUsage|
+    3. Configuration .................................. |VLideConfig|
+    4. Examples ....................................... |VLideExamples|
+       4.1 Simple ..................................... |VLideExampleSimple|
+       4.2 Multiple ................................... |VLideExampleMultiple|
+       4.3 Syntax per slide ........................... |VLideExampleSyntax|
+       4.4 Autoexe Shell .............................. |VLideExampleShell|
+       4.5 Autoexe Python  ............................ |VLideExamplePython|
+       4.6 Autoexe Perl  .............................. |VLideExamplePerl|
+       4.7 Autoexe Tmux ............................... |VLideExampleTmux|
+    5. Bugs ........................................... |VLideBugs|
+    6. Contributing ................................... |VLideContributing|
+    7. Changelog ...................................... |VLideChangelog|
+
+==============================================================================
+INTRO                                                               *VLideIntro*
+
+VLide allows you to use Vim as a presentation tool, you start defining a text
+file (such as this one) and it setups slides and proper keybindings to move
+around.
+
+Slides are separated by   ====================================================
+Subslides by              ----------------------------------------------------
+
+In addition to content it can run commands and modify syntax highlighting (per
+slide) through @blocks which are removed at runtime: >
+
+    @autoexe{ vim: set tw=78 ts=8 ft=sh: }
+
+    @autoexe{sh}
+        printf "%s\\n" "Hello world!"
+    @end
+
+To move around, the following keys are remapped:
+
+                      |      Key      |      Action     |
+                      |  ------------ | --------------- |
+                      |    <Space>    |    Next Slide   |
+                      |  <Backspace>  |  Previous Slide |
+
+==============================================================================
+USAGE                                                               *VLideUsage*
+
+:VLide <file> <th-slide> <th-subslide>                                  *:VLide*
+    Open <file> as a presentation deck and change to <n-slide> <n-subslide>
+    (default to 1,1). If no argument is given, the current buffer is used. If
+    a file is given, that will be used. If one or two numbers are provided,
+    vlide will move to that slide / subslide in the current or specified deck.
+
+    For example: >
+
+        :VLide (use current buffer and go to the 1st slide)
+        :VLide ~/presentation.txt (open presentation and go to the 1st slide)
+        :VLide ~/presentation.txt 10 (go to the 10th slide)
+        :VLide ~/presentation.txt 10 2 (go to the 10th slide, 2nd subslide)
+        :VLide 5 3 (go to 5th slide / 3rd subslide in the current deck)
+
+------------------------------------------------------------------------------
+:VLideExit                                                          *:VLideExit*
+    Exit presentation mode.
+
+------------------------------------------------------------------------------
+:VLideToggle <file> <th-slide> <th-subslide>                     *:VLideToggle*
+    Toggle Vlide mode, either open a presentation deck or exit from it.
+    Accept the same parameters as |VLide|.
+
+------------------------------------------------------------------------------
+:VLideNext[Slide|Subslide] <n>   *:VLideNext* *:VLideNextSlide* *:VLideNextSubslide*
+    Go to the next or to the +<n>th slide|subslide. E.g: >
+
+        :VLideNext         forward <n> subslides or slides (default 1)
+        :VLideNextSlide    forward <n> slides (default 1), skip subslides
+        :VLideNextSubslide forward <n> subslides (default 1)
+<
+------------------------------------------------------------------------------
+:VLidePrevious[Slide|Subslide] <n>          *:VLidePrevious* *:VLidePreviousSlide*
+                                                        *:VLidePreviousSubslide*
+    Go to the previous or to the -<n>th slide|subslide. E.g: >
+
+        :VLidePrevious         backward <n> subslides or slides (default 1)
+        :VLidePreviousSlide    backward <n> slides (default 1), skip subslides
+        :VLidePreviousSubslide backward <n> subslides (default 1)
+<
+------------------------------------------------------------------------------
+:VLideAutoExe[!]                                           *:VLideEnableAutoExe*
+    Enable |autoexe| mode, enabled by default.
+
+------------------------------------------------------------------------------
+:VLideAutoExeDisable                                      *:VLideAutoExeDisable*
+    Disable |autoexe| mode.
+
+------------------------------------------------------------------------------
+:VLideReferenceSlide                                      *:VLideReferenceSlide*
+    Open the Vlide Reference Slide (this document).
+
+==============================================================================
+CONFIGURATION                                                      *VLideConfig*
+
+These options should be set in your |vimrc| file.
+
+g:vlide_next                                                  *VLideConfig-next*
+    Next mapping
+
+    Use this option to configure the next slide mapping. >
+
+        let g:vlide_next = '<SPACE>'
+<
+    Alternatively it can be assigned directly to the <Plug> action: >
+
+        nmap <SPACE> <Plug>VLideNext
+<
+    Or disabled completely by using an internal mapping: >
+
+        nmap <Plug>DisableVLideNext <Plug>VLideNext
+<
+------------------------------------------------------------------------------
+g:vlide_previous                                          *VLideConfig-previous*
+    Previous mapping
+
+    Use this option to configure the previous slide mapping. >
+
+        let g:vlide_previous = '<BACKSPACE>'
+<
+    Alternatively it can be assigned directly to the <Plug> action: >
+
+        nmap <BACKSPACE> <Plug>VLidePrevious
+<
+    Or disabled completely by using an internal mapping: >
+
+        nmap <Plug>DisableVLidePrevious <Plug>VLidePrevious
+<
+------------------------------------------------------------------------------
+g:vlide_autoexe                                            *VLideConfig-autoexe*
+    Execute defined commands. Default: enabled
+
+    Use this option to enable/disable autoexe. >
+
+        let g:vlide_autoexe = 1
+<
+------------------------------------------------------------------------------
+g:vlide_statusline                                      *VLideConfig-statusline*
+    Slide separator
+
+    Use this option to customize the vlide statusline. >
+
+        let g:vlide_statusline = 'Press <Space> or <Backspace> to continue'
+<
+------------------------------------------------------------------------------
+g:vlide_slide_separator                            *VLideConfig-slide-separator*
+    Slide separator
+
+    Use this option to customize the vlide slide separator. >
+
+        let g:vlide_slide_separator = '\v^\={78,}'
+<
+------------------------------------------------------------------------------
+g:vlide_subslide_separator                      *VLideConfig-subslide-separator*
+    Slide separator
+
+    Use this option to customize the vlide subslide separator. >
+
+        let g:vlide_subslide_separator = '\v^\-{78,}'
+<
+------------------------------------------------------------------------------
+g:vlide_show_subslide_separator            *VLideConfig-show-subslide-separator*
+    Default: disabled
+
+    Use this option to show/hide the subslide separator on showcase: >
+
+        let g:vlide_show_subslide_separator = 0
+<
+==============================================================================
+EXAMPLE SIMPLE                                              *VLideExampleSimple*
+
+By default, slides are defined as ft=|help| files, which provide feature rich
+syntax.
+
+You can use tildes (~) at the end phrases to highlight titles, eg:
+
+    HEADER~
+
+Greater than (>) and less than (<) characters to surround verbatim text, eg: >
+
+    Verbatim code
+<
+{Braces} or <xml-tags> to display emphatised text, as well as
+http://example.com links and text between pipes (|) to display |underlined|
+|content|.
+
+The word "Note", "Notes" and similar automagically receive distinctive
+highlighting.
+
+You can learn more about vim html sintax at *:edit* |$VIMRUNTIME/syntax/help.vim|
+
+==============================================================================
+EXAMPLE MULTIPLE                                          *VLideExampleMultiple*
+
+Slides separated by |g:vlide_subslide_separator| are automatically handled as
+steps of the main slide and displayed in order.
+
+------------------------------------------------------------------------------
+
+Subslide 1
+
+------------------------------------------------------------------------------
+
+Subslide 2
+
+------------------------------------------------------------------------------
+
+Subslide 3
+
+==============================================================================
+EXAMPLE SYNTAX PER SLIDE                                    *VLideExampleSyntax*
+
+# Every slide can define it's own syntax highlighting by using @autoexe blocks
+
+    @autoexe{ vim: set tw=78 ts=8 ft=markdown: }
+
+This example uses markdown as syntax type and a |textwidth| of 78. Markdown is
+a lightweight markup language with support for *italic*, **bold**, and
+`monospace` content, lists:
+
+  * like
+  * this
+
+  1. or like
+  2. this
+
+> Quotes ...
+> ...
+
+## Code:
+
+    for i in $@; do; shift; done
+
+Etc, you can learn more about markdown at:
+
+  * https://daringfireball.net/projects/markdown/syntax
+
+@autoexe{ vim: set tw=78 ts=8 ft=markdown: }
+
+------------------------------------------------------------------------------
+Empty @autoexe{} blocks allow to define multiline vim code which is executed
+at presentation time (look for a friendly message at the statusbar):
+
+    @autoexe{}
+      let greeting = "Hello world from Vim!"
+      echon greeting
+    @end
+
+@autoexe{}
+  let greeting = "Hello world from Vim!"
+  echohl Title | echon greeting | echohl None
+@end
+
+==============================================================================
+EXAMPLE AUTOEXE SHELL                                        *VLideExampleShell*
+
+Other auto executable code includes, shell ...
+
+    @autoexe{sh}
+        echo "Hello world from the default shell"
+    @end
+
+@autoexe{sh}
+    echo "Hello world from the default shell"
+@end
+
+------------------------------------------------------------------------------
+
+    @autoexe{/bin/bash}
+        echo "Hello world from bash o@o/"
+    @end
+
+@autoexe{/bin/bash}
+    echo "Hello world from bash o@o/"
+@end
+
+==============================================================================
+EXAMPLE AUTOEXE PYTHON                                      *VLideExamplePython*
+
+Python ...
+
+.. code:: python
+
+    if __name__ == '__main__':
+        import sys
+        print "Hello world from Python2!"
+        sys.exit()
+
+@autoexe{/usr/bin/env python2}
+print "Hello world from Python2!"
+@end
+
+@autoexe{ vim: set tw=78 ts=8 ft=rst norl: }
+
+==============================================================================
+EXAMPLE AUTOEXE PERL                                          *VLideExamplePerl*
+
+Perl ...
+
+.. code:: perl
+
+    #!/usr/bin/perl
+    print "Hello world from Perl!";
+
+@autoexe{}
+    set tw=78
+    set ts=8
+    set ft=rst
+@end
+
+@autoexe{perl}
+    print "Hello world from Perl!";
+@end
+
+==============================================================================
+EXAMPLE AUTOEXE TMUX                                          *VLideExampleTmux*
+
+You get the idea.., a specially interesting use case is combining |VLide| with
+|tmux| to launch interactive demo sessions. To get a glanse at this, execute
+the following command in another terminal: >
+
+    $ tmux kill-session -t vlide-demo; tmux new-session -s vlide-demo vim
+<
+Now type '|:VLideReferenceSlide| 12' from the recently opened tmux session.
+You should see a <0> blinking a couple of times, if that's the case you've
+followed the procedure sucessfully, keep pressing <Space> in the new session
+to jump to the next slide.
+
+@autoexe{sh}
+    tmux display-panes && sleep 1
+    tmux send-keys C-M && sleep 1
+    tmux display-panes && sleep 1
+    tmux send-keys C-M
+@end
+
+@autoexe{}
+    redraw!
+@end
+
+@autoexe{ vim: tw=78 ts=8 ft=help: }
+
+==============================================================================
+EXAMPLE AUTOEXE TMUX                                          *VLideExampleTmux*
+
+Within |VLide| you can control tmux features such as:
+
+------------------------------------------------------------------------------
+    * Opening new tmux panes
+
+@autoexe{sh}
+    tmux split-window -v -p 40
+    tmux split-window -t1 -h -p 50
+    tmux select-pane -t0
+    tmux send-keys C-M
+@end
+
+------------------------------------------------------------------------------
+    * Writing commands (look for 'htop||top' in the below pane)
+
+@autoexe{sh}
+    tmux send-keys -t1 'htop || top'
+    tmux send-keys C-M
+@end
+
+------------------------------------------------------------------------------
+    * Executing tests
+
+@autoexe{sh}
+    tmux send-keys -t1 'C-M'
+    tmux send-keys C-M
+@end
+
+------------------------------------------------------------------------------
+    * Interacting with python/ruby or just any other REPL interface
+
+@autoexe{sh}
+    tmux send-keys -t2 'python'
+    tmux send-keys -t2 'C-M'
+    tmux send-keys -t2 'print("Hello, World\!")'
+    tmux send-keys -t2 'C-M'
+    tmux send-keys C-M
+@end
+
+------------------------------------------------------------------------------
+    * The sky is the limit ...
+
+
+
+. .　　　　.　☾ °☆ 　. * ● ¸ .　　　★　° :.　 . • ○ ° ★　 .　 *　.　　　　　　
+. 　 ° 　. ● .　　★　　° ☾ °☆ 　¸. ● .　　★　　★ ° ☾ ☆ ¸. ¸ 　★　 :.　 
+. • ○ ° ★　 .　 *　.　.　　¸ .　　 ° 　¸. * ● ¸ .　　　　° ☾ ° 　¸. ● ¸ .　　★
+:.　 . • °
+
+
+
+@autoexe{sh}
+    tmux kill-pane -a -t0
+    tmux send-keys C-M
+@end
+
+==============================================================================
+BUGS                                                                 *VLideBugs*
+
+If you find a bug please post it on the issue tracker:
+
+    https://github.com/javier-lopez/vlide.vim/issues
+
+==============================================================================
+CONTRIBUTING                                                 *VLideContributing*
+
+I created this plugin while waiting for a meeting, it does what I need, if you
+require something else the best way to get it is to send a patch. Fork it,
+hack and open a pull request.
+
+GitHub: http://github.com/javier-lopez/vlide.vim
+
+==============================================================================
+CHANGELOG                                                       *VLideChangelog*
+
+v0.0.1
+    * Initial release.
+
+/* vim: set ts=8 sw=4 tw=78 ft=help :*/
