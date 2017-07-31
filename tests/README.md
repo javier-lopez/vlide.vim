@@ -2,5 +2,5 @@ Usage
 -----
 
    ```sh
-   $ vim -Nu tests.vimrc -c'+Vader! *.vader'
+   $ sh tests.sh [test.vader]
    ```
